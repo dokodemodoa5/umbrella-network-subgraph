@@ -1,0 +1,32 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Chain
+    network: ropsten
+    source:
+      address: "0xcf18a7e4c7FDa8775480892E90539Ff396B18d77"
+      abi: Chain
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - LogMint
+        - LogPadding
+        - LogVoter
+        - OwnershipTransferred
+      abis:
+        - name: Chain
+          file: ./abis/Chain.json
+      eventHandlers:
+        - event: LogMint(indexed address,uint256,uint256,uint256)
+          handler: handleLogMint
+        - event: LogPadding(indexed address,uint16)
+          handler: handleLogPadding
+        - event: LogVoter(indexed uint256,indexed address,uint256)
+          handler: handleLogVoter
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      file: ./src/mapping.ts
