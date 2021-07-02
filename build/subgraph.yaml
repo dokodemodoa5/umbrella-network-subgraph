@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: Chain
@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0xcf18a7e4c7FDa8775480892E90539Ff396B18d77"
       abi: Chain
-      startBlock: 10294688 
+      startBlock: 10294688
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -20,7 +20,7 @@ dataSources:
         - OwnershipTransferred
       abis:
         - name: Chain
-          file: ./abis/Chain.json
+          file: Chain/abis/Chain.json
       eventHandlers:
         - event: LogMint(indexed address,uint256,uint256,uint256)
           handler: handleLogMint
@@ -33,4 +33,4 @@ dataSources:
       callHandlers:
         - function: submit(uint32,bytes32,bytes32[],uint256[],uint8[],bytes32[],bytes32[])
           handler: handleSubmit
-      file: ./src/mapping.ts
+      file: Chain/Chain.wasm

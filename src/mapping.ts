@@ -2,14 +2,23 @@ import {
   LogMint as LogMintEvent,
   LogPadding as LogPaddingEvent,
   LogVoter as LogVoterEvent,
-  OwnershipTransferred as OwnershipTransferredEvent
+  OwnershipTransferred as OwnershipTransferredEvent,
+  SubmitCall as SubmitCall
 } from "../generated/Chain/Chain"
+
 import {
   LogMint,
   LogPadding,
   LogVoter,
-  OwnershipTransferred
+  OwnershipTransferred,
+  Price,
+  AssetPair
 } from "../generated/schema"
+
+import {
+  Bytes,
+  BigInt
+} from "@graphprotocol/graph-ts";
 
 export function handleLogMint(event: LogMintEvent): void {
   let entity = new LogMint(
@@ -51,3 +60,35 @@ export function handleOwnershipTransferred(
   entity.newOwner = event.params.newOwner
   entity.save()
 }
+
+export function handleSubmit(call: SubmitCall): void {
+
+  let price = new Price(call.transaction.hash.toHex())
+
+  let keys: Bytes[] = call.inputs._keys
+  let values: BigInt[] = call.inputs._values
+  let timestamp: BigInt = call.inputs._dataTimestamp
+
+  for (let i = 0; i < keys.length; i++) {
+    let key = keys[i].toHex()
+    let assetPair = new AssetPair(key)
+    assetPair.save()
+
+    let value: BigInt = values[i]
+
+    price.assetPair = assetPair.id
+    price.timestamp = timestamp
+    price.price = value
+    price.save()
+  }
+
+}
+
+// function hex_to_ascii(str1: string): string {
+//   var hex = str1.toString();
+//   var str = '';
+//   for (var n = 0; n < hex.length; n += 2) {
+//     str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+//   }
+//   return str;
+// }
