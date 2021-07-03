@@ -34,3 +34,35 @@ dataSources:
         - function: submit(uint32,bytes32,bytes32[],uint256[],uint8[],bytes32[],bytes32[])
           handler: handleSubmit
       file: Chain/Chain.wasm
+  - kind: ethereum/contract
+    name: Chain2
+    network: ropsten
+    source:
+      address: "0xc257031B32aDD13C873D2210c032976e272898c2"
+      abi: Chain
+      startBlock: 10554568
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - LogMint
+        - LogPadding
+        - LogVoter
+        - OwnershipTransferred
+      abis:
+        - name: Chain
+          file: Chain2/abis/Chain.json
+      eventHandlers:
+        - event: LogMint(indexed address,uint256,uint256,uint256)
+          handler: handleLogMint
+        - event: LogPadding(indexed address,uint16)
+          handler: handleLogPadding
+        - event: LogVoter(indexed uint256,indexed address,uint256)
+          handler: handleLogVoter
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      callHandlers:
+        - function: submit(uint32,bytes32,bytes32[],uint256[],uint8[],bytes32[],bytes32[])
+          handler: handleSubmit
+      file: Chain/Chain.wasm
